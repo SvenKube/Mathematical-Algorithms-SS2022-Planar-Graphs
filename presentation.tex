@@ -1,0 +1,1485 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage[ngerman]{babel}
+
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+
+\usetheme[sectionpage=none, subsectionpage=none,progressbar=frametitle]{metropolis}
+\setbeamertemplate{frame numbering}[fraction]
+
+\useoutertheme{metropolis}
+\useinnertheme{metropolis}
+\usefonttheme{metropolis}
+\usecolortheme{seahorse}
+\setbeamercolor{background canvas}{bg=white}
+
+\usepackage{xcolor}
+
+\definecolor{FHgreen}{HTML}{00978F}
+\definecolor{FHgreenLight}{HTML}{6BC6C6}
+\definecolor{FHgreenLightLight}{HTML}{AAEBEB}
+\definecolor{FHgreenLightExtra}{HTML}{E8FFFF}
+\definecolor{FHgreenLightMedium}{HTML}{b0e0e0}
+\definecolor{FHorange}{HTML}{F49300}
+\definecolor{FHorangeLight}{HTML}{FFEAC5}
+\definecolor{FHorangeLightLight}{HTML}{FFD7A8}
+\definecolor{FHgray}{HTML}{AAAAAA}
+\definecolor{FHgrayLight}{HTML}{EBEBEB}
+\definecolor{FHmint}{cmyk}{0.75,0,0.4,0}
+\definecolor{FHmintDarkMedium}{cmyk}{0.75,0,0.4,0.10}
+\definecolor{FHmintDark}{cmyk}{0.75,0,0.4,0.25}
+\definecolor{FHmintDarkDark}{cmyk}{0.75,0,0.4,0.50}
+\definecolor{FHmintDarkExtra}{cmyk}{0.75,0,0.4,0.75}
+\definecolor{FHblack}{cmyk}{0,0,0,1.0}
+\definecolor{FHblackLightMedium}{cmyk}{0,0,0,0.75}
+\definecolor{FHblackLight}{cmyk}{0,0,0,0.50}
+\definecolor{FHblackLightLight}{cmyk}{0,0,0,0.25}
+\definecolor{FHblackLightExtra}{cmyk}{0,0,0,0.10}
+
+
+\setbeamercolor{structure}{fg=black, bg=white}
+\setbeamercolor{palette primary}{fg=black, bg=white}
+\setbeamercolor{palette quaternary}{fg=red, bg=green}
+
+\setbeamercolor{titlelike}{parent=palette primary}
+\setbeamercolor*{author}{parent=titlelike}
+\setbeamercolor*{date}{parent=titlelike}
+\setbeamercolor*{institute}{parent=titlelike}
+\setbeamercolor*{frametitle}{parent=palette primary}
+\setbeamercolor*{frametitle}{bg=}
+\setbeamercolor*{title in head/foot}{parent=titlelike}
+\setbeamercolor*{title in head/foot}{bg=}
+\setbeamercolor*{subsubsection title}{use=structure}
+\setbeamercolor*{alerted text}{fg=FHmint, bg=white}
+\setbeamercolor{local structure}{parent=structure}
+
+\setbeamercolor{item}{parent=local structure}
+\setbeamercolor{subitem}{parent=item}
+\setbeamercolor{subsubitem}{parent=subitem}
+
+\usepackage{csquotes}
+
+
+\title{Minoren und der Satz von Kuratowski}
+\author{Sven Kube}
+\date{10. Juni 2022}
+
+\setbeamercovered{transparent=5}
+
+\begin{document}
+\metroset{block=fill}
+\setbeamertemplate{frame footer}{10. Juni 2022\text{ - Sven Kube - }\inserttitle}
+
+
+\AtBeginSection[]
+  {
+    \ifnum \value{framenumber}>1
+      \begin{frame}<beamer>
+      \frametitle{Überblick}
+      \tableofcontents[currentsection]
+      \end{frame}
+    \else
+    \fi
+  }
+
+
+\begin{frame}
+\titlepage
+\begin{tikzpicture}[remember picture,overlay,shift={(current page.north east)}]
+\node[anchor=north east,xshift=5pt,yshift=-0.3cm]{\includegraphics[width=1.4cm]{./FHAC.jpg}};
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}[t]{Motivation} \vspace{4pt}
+
+Bisher: Eulers Polyedersatz $\Rightarrow$ $K_{3,3}$ und $K_5$ nicht planar.
+
+\vspace{1em}
+
+Überlegung: 
+
+\begin{itemize}
+    \item Erweiterter $K_{3,3}$ oder $K_5$ ist auch nicht planar.
+    \item $K_{3,3}$ und $K_5$ sind \enquote{Atome von Nichtplanarität} oder \enquote{kleinste Elemente nicht planarer Graphen}.
+    \item Wenn in einem Graph der $K_{3,3}$ oder $K_5$ \textit{drin} ist $\Rightarrow$ Graph nicht planar.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[c]{Überblick}\vspace{0.6em}
+\small{
+\tableofcontents
+}
+\end{frame}
+
+\section{Die Graphen $K_{3,3}$ und $K_5$ sind fast planar}
+\subsection{}
+
+\begin{frame}[c]{$K_{3,3}$ und $K_5$ sind fast planar} \vspace{4pt}
+
+\begin{block}{Definition: Fast planar}
+Ein Graph $G$ ist fast planar, wenn er durch löschen einer Kante planar wird.
+\end{block}
+
+\vspace{1em}
+Gilt für $K_{3,3}$ und $K_5$, siehe folgende Beispiele.
+
+\end{frame}
+
+\begin{frame}[c]{$K_{3,3}$ ist fast planar} \vspace{4pt}
+\vspace{-4em}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.3\linewidth}
+    \centering
+        \vspace{-2.2cm}
+        \begin{tikzpicture}[scale=0.8,node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {1};
+    \node[main] at (2, 0) (2) {2};
+    \node[main] at (4, 0) (3) {3};
+    
+    \node[main] at (0, -2) (4) {4};
+    \node[main] at (2, -2) (5) {5};
+    \node[main] at (4, -2) (6) {6};
+
+    \path (1) edge (4);
+    \path (1) edge (5);
+    \path (1) edge (6);
+    
+    \path (2) edge (4);
+    \path (2) edge (5);
+    \path (2) edge (6);
+    
+    \path[highlight] (3) edge (4);
+    \path (3) edge (5);
+    \path (3) edge (6);
+    
+    \end{tikzpicture} 
+    \end{minipage}
+    \begin{minipage}{.07\linewidth}
+    \centering
+    \vspace{-2.2cm}
+    $\Longrightarrow$
+    \end{minipage}
+    \begin{minipage}{.5\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.8,node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {1};
+    \node[main] at (2, 0) (2) {2};
+    \node[main] at (4, 0) (3) {3};
+    
+    \node[main] at (0, -2) (4) {4};
+    \node[main] at (2, -2) (5) {5};
+    \node[main] at (4, -2) (6) {6};
+
+    \path (1) edge (4);
+    \path (1) edge (5);
+    \path (1) edge (6);
+    
+    \path (2) edge [out=130,in=180, distance=3cm ] (4);
+    \path (2) edge [out=30,in=300, distance=7cm ] (5);
+    \path (2) edge (6);
+    
+    \path (3) edge [out=330,in=310, distance=3cm ] (5);
+    \path (3) edge (6);
+    
+    \end{tikzpicture} 
+    \end{minipage}
+    \vspace{-7em}
+    \caption{Durch entfernen einer Kante wird der $K_{3,3}$ planar.}
+    \label{fig:my_label}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[c]{$K_5$ ist fast planar}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.4\linewidth}
+        \centering
+ \begin{tikzpicture}[scale=0.8,node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+
+    \path (1) edge (2);
+    \path[blue] (1) edge (3);
+    \path (1) edge (4);
+    \path (2) edge (3);
+    \path (2) edge (4);
+    \path (2) edge (5);
+    \path (3) edge (4);
+    \path (3) edge (5);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+\end{tikzpicture} 
+\end{minipage}
+\begin{minipage}{.07\linewidth}
+\centering
+$\Longrightarrow$
+\end{minipage}
+    \begin{minipage}{.4\linewidth}
+        \centering
+      
+    \begin{tikzpicture}[scale=0.8,node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+
+    \path (1) edge (2);
+    \path (1) edge [out=160,in=180, distance=3cm ] (4);
+    \path (2) edge (3);
+    \path (2) edge [out=300,in=320, distance=3cm ] (4);
+    \path (2) edge (5);
+    \path (3) edge (4);
+    \path (3) edge (5);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+
+\end{tikzpicture} 
+\end{minipage}
+\vspace{-1em}
+    \caption{Durch entfernen einer Kante wird der $K_5$ planar.}
+    \label{fig:my_label}
+\end{figure}
+
+\end{frame}
+
+
+
+
+\section{Kantenkontraktion}
+
+\subsection{}
+
+\begin{frame}[t]{Kantenkontraktion}
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{@{}c@{}}
+    \begin{tikzpicture}[scale = 0.7, node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+    
+        \node[main] at (-2, 1)  (1)    {};
+        \node[main] at (1.5, 0.8)  (2)    {};
+        
+        \node[highlight] at (0, 0)  (u)    {u};
+        \node[highlight] at (0, -2)  (v)    {v};
+        
+        \node[main] at (-1, -3.5)  (3)    {};
+        \node[main] at (0.3, -3.5)  (4)    {};
+        \node[main] at (1.5, -2)  (5)    {};
+    
+        
+        \path (1) edge (2);
+        \path (1) edge (u);
+        \path (2) edge (u);
+        
+        \path[blue] (u) edge node[right] {$e$} (v);
+        
+        \path (3) edge (v);
+        \path (4) edge (v);
+        \path (5) edge (v);
+        
+        \path (4) edge (5);
+        
+        \path[dashed] (1) edge  (-2.5, 1.5);
+        \path[dashed] (1) edge  (-0.8, 1.6);
+        
+        \path[dashed] (2) edge  (1.5, 1.3);
+        \path[dashed] (2) edge  (2, 0.8);
+        
+        
+        \path[dashed] (3) edge  (-1.5, -3.5);
+        \path[dashed] (3) edge  (-1, -4);
+        \path[dashed] (4) edge  (0.3, -4);
+       
+        
+        \path[dashed] (5) edge  (2, -2.5);
+        \path[dashed] (5) edge  (2, -1.5);
+        
+        \draw [-stealth,draw=green](-0.2,-0.4) -- (-0.2,-0.9);
+        \draw [-stealth,draw=green](-0.2,-1.6) -- (-0.2,-1.1);
+
+    
+    \end{tikzpicture} 
+    \end{tabular}
+    \hspace{0.5cm}
+    \begin{tabular}{p{1cm}}
+    \begin{center}
+         $\Longrightarrow$
+    \end{center}
+    \end{tabular}
+    \hspace{0.5cm}
+    \begin{tabular}{@{}c@{}}
+   \begin{tikzpicture}[scale = 0.7, node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+    
+        \node[main] at (-2, 1)  (1)    {};
+        \node[main] at (1.5, 0.8)  (2)    {};
+        
+        
+        \node[highlight] at (0, -1)  (w)    {w};
+        
+        \node[main] at (-1, -3.5)  (3)    {};
+        \node[main] at (0.3, -3.5)  (4)    {};
+        \node[main] at (1.5, -2)  (5)    {};
+    
+        
+        \path (1) edge (2);
+        \path (1) edge (w);
+        \path (2) edge (w);
+        
+        
+        \path (3) edge (w);
+        \path (4) edge (w);
+        \path (5) edge (w);
+        
+        \path (4) edge (5);
+        
+        \path[dashed] (1) edge  (-2.5, 1.5);
+        \path[dashed] (1) edge  (-0.8, 1.6);
+        
+        \path[dashed] (2) edge  (1.5, 1.3);
+        \path[dashed] (2) edge  (2, 0.8);
+        
+        
+        \path[dashed] (3) edge  (-1.5, -3.5);
+        \path[dashed] (3) edge  (-1, -4);
+        \path[dashed] (4) edge  (0.3, -4);
+       
+        
+        \path[dashed] (5) edge  (2, -2.5);
+        \path[dashed] (5) edge  (2, -1.5);
+        
+      
+
+    
+    \end{tikzpicture}
+    \end{tabular}
+    \label{fig:edge_contraction}
+\end{figure}
+
+\begin{block}{Definition: Kantenkontraktion}
+\vspace{0.5em}
+Aus einem Graph $G$ wird eine Kante $e$ entfernt und die beiden vorher durch die Kante $e$ verbundenen Knoten $u$ und $v$ zu einem neuen Knoten $w$ vereinigt.
+\vspace{0.5em}
+\end{block}
+
+\end{frame}
+
+
+
+\section{Unterteilungsgraph}
+\subsection{}
+
+\begin{frame}[c]{Unterteilungsgraph} \vspace{4pt}
+
+
+\begin{figure}[H]
+    \centering
+    $G:$\hspace{0.5cm}
+        \begin{tabular}{@{}c@{}}
+
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}]
+        \node[main] (1) {$u$}; 
+        \node[main] (2) [below of=1] {$v$}; 
+
+        \path (1) edge  node [right] {$e$} (2);
+    \end{tikzpicture}
+    \end{tabular}
+    \hspace{1cm}$\Longrightarrow$\hspace{1cm}
+    $G':$\hspace{0.5cm}
+        \begin{tabular}{@{}c@{}}
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+        \node[main] (1) {$u$}; 
+        \node[draw, circle, blue] (2) [below of=1] {$w$}; 
+        \node[main] (3) [below of=2] {$v$}; 
+
+       \path[blue] (1) edge node [right] {$e_1$} (2);
+       \path[blue] (2) edge node [right] {$e_2$} (3);
+    
+    \end{tikzpicture} 
+    \end{tabular}
+    \label{fig:edge_subdivision}
+\end{figure}
+
+\begin{block}{Definition: Unterteilungsgraph}
+\vspace{0.5em}
+Als Unterteilungsgraph eines Graphen $G$ wird ein Graph bezeichnet, der durch (null-, ein- oder mehrmalige) Kantenunterteilung in $G$ entsteht.
+\vspace{0.5em}
+\end{block}
+
+\end{frame}
+
+
+\section{Minor und topologischer Minor}
+
+\subsection{Minor}
+
+
+
+\begin{frame}[b]{Minor}
+
+\onslide<1->{
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.32\linewidth}
+    \centering
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {};
+    \node[main] at (-1, -2) (2) {};
+    \node[main] at (1, -2) (3) {};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (1);
+
+\end{tikzpicture}
+\vspace{0.6cm}
+  \caption{$K_3$}
+  
+
+\end{minipage}
+    \begin{minipage}{.32\linewidth}
+    \centering
+ \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, small/.style = {draw, circle, fill, scale = 0.4}]
+
+    \node[small] at (0, 0) (11) {};
+    \node[small] at (0.3, -0.3) (12) {};
+    \node[small] at (0.4, 0.2) (13) {};
+
+    
+    
+    \node[small] at (-1, -2) (21) {};
+    \node[small] at (-0.6, -1.9) (22) {};
+    
+    
+    
+    \node[small] at (1, -2) (31) {};
+    \node[small] at (1.15, -1.3) (32) {};
+    \node[small] at (1.5, -1.3) (33) {};
+    \node[small] at (1.5, -1.8) (34) {};
+    
+
+    \path (11) edge (12);
+    \path (11) edge (13);
+    \path (11) edge (21);
+    \path (32) edge (12);
+    
+    \path (32) edge (33);
+    \path (32) edge (31);
+    \path (34) edge (33);
+    \path (34) edge (31);
+    \path (31) edge (33);
+    
+    \path (22) edge (31);
+    \path (22) edge (21);
+    
+    \draw (0.2,0) circle (15pt);
+    
+    \draw (-0.8, -1.95) ellipse (15pt and 10pt);
+    
+    \draw (1.25, -1.7) circle (20pt);
+
+\end{tikzpicture}
+  \caption{$G_1$}
+  
+
+\end{minipage}
+\begin{minipage}{.32\linewidth}
+\centering
+ \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, small/.style = {draw, circle, fill, scale = 0.4},gray/.style = {draw=gray, circle, fill=gray, scale = 0.4}]
+
+    \node[small] at (0, 0) (11) {};
+    \node[small] at (0.3, -0.3) (12) {};
+    \node[small] at (0.4, 0.2) (13) {};
+    
+    \node[gray] at (1.2, -0.3) (X1) {};
+    \path[gray] (13) edge (X1);
+    \path[gray] (33) edge (X1);
+
+    
+    
+    \node[small] at (-1, -2) (21) {};
+    \node[small] at (-0.6, -1.9) (22) {};
+    
+    \node[gray] at (-0.8, -0.4) (X2) {};
+    \node[gray] at (-1.7, -2) (X3) {};
+    \node[gray] at (-1.3, -1.5) (X4) {};
+    
+    \path[gray] (11) edge (X2);
+    \path[gray] (X2) edge (X4);
+    \path[gray] (X3) edge (X4);
+    
+    \path[gray] (X3) edge (21);
+    \path[gray] (X4) edge (21);
+
+    
+    
+    \node[small] at (1, -2) (31) {};
+    \node[small] at (1.15, -1.3) (32) {};
+    \node[small] at (1.5, -1.3) (33) {};
+    \node[small] at (1.5, -1.8) (34) {};
+    
+
+    \path (11) edge (12);
+    \path (11) edge (13);
+    \path (11) edge (21);
+    \path (32) edge (12);
+    
+    \path (32) edge (33);
+    \path (32) edge (31);
+    \path (34) edge (33);
+    \path (34) edge (31);
+    \path (31) edge (33);
+    
+    \path (22) edge (31);
+    \path (22) edge (21);
+    
+    \draw (0.2,0) circle (15pt);
+    
+    \draw (-0.8, -1.95) ellipse (15pt and 10pt);
+    
+    \draw (1.25, -1.7) circle (20pt);
+
+\end{tikzpicture} 
+  \caption{$G_2$}
+  
+
+\end{minipage}
+\end{figure}
+
+}
+
+\setbeamercovered{transparent=20}
+
+\only<2->{
+\begin{block}{Definition: Minor}
+\vspace{0.5em}
+Ein Graph $G$ heißt \textit{Minor} von $H$, wenn $H$ einen Teilgraph enthält, aus dem durch Kantenkontraktion $G$ hervorgeht.
+\vspace{0.5em}
+\end{block}
+}
+\end{frame}
+
+
+
+
+
+
+
+\subsection{Topologischer Minor}
+
+\begin{frame}[b]{Topologischer Minor}
+
+\onslide<1->{
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.32\linewidth}
+    \centering
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {};
+    \node[main] at (-1, -2) (2) {};
+    \node[main] at (1, -2) (3) {};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (1);
+
+\end{tikzpicture}
+  \caption{$K_3$}
+  
+
+\end{minipage}
+    \begin{minipage}{.32\linewidth}
+    \centering
+   \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, small/.style = {draw, circle, fill, scale = 0.4}]
+
+    \node[main] at (0, 0) (1) {};
+    
+    \node[small] at (-0.5, -1) (a) {};
+    
+    \node[main] at (-1, -2) (2) {};
+    
+    \node[small] at (0.65, -1.3) (a) {};
+    
+    \node[main] at (1, -2) (3) {};
+    
+    \node[small] at (-0.5, -2) (c) {};
+    \node[small] at (0.3, -2) (d) {};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (1);
+
+\end{tikzpicture}
+  \caption{$G_1$}
+ 
+
+\end{minipage}
+\begin{minipage}{.32\linewidth}
+\centering
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, small/.style = {draw, circle, fill, scale = 0.4}, gray/.style = {draw=gray, circle, fill=gray,}]
+
+    \node[main] at (0, 0) (1) {};
+    
+    
+    \node[small] at (-0.5, -1) (a) {};
+    
+    \node[main] at (-1, -2) (2) {};
+    
+    \node[small] at (0.65, -1.3) (a) {};
+    
+    \node[main] at (1, -2) (3) {};
+    
+    \node[small] at (-0.5, -2) (c) {};
+    \node[small] at (0.3, -2) (d) {};
+    
+    
+    
+    \node[gray] at (-1.5, 0) (z) {};
+    \node[gray] at (2, 0) (y) {};
+    \node[gray] at (2.5, -2) (x) {};
+
+    
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (1);
+    
+    \path[gray] (3) edge (x);
+    \path[gray] (1) edge (y);
+    \path[gray] (3) edge (y);
+    \path[gray] (1) edge (z);
+
+\end{tikzpicture} 
+  \caption{$G_2$}
+
+\end{minipage}
+\end{figure}
+}
+
+
+\only<2->{
+\begin{block}{Definition: Topologischer Minor}
+\vspace{0.5em}
+Ein Graph $G$ heißt \textit{topologischer Minor} von $H$, wenn $H$ einen Unterteilungsgraphen von $G$ enthält.
+\vspace{0.5em}
+\end{block}
+}
+
+
+\end{frame}
+
+
+\subsection{Minorenrelation}
+
+\begin{frame}[t]{Minorenrelation} \vspace{4pt}
+
+\begin{block}{Definition: Minorenrelation}
+\vspace{0.5em}
+$ G \preccurlyeq H :\Longleftrightarrow G$ ist Minor von $H$.
+\vspace{0.5em}
+\end{block}
+\vspace{0.5em}
+\begin{enumerate}
+    \item reflexiv, transitiv und antisymetrisch.\\
+    Definiert Ordnungsrelation auf den endlichen Graphen.
+    \item jeder topologische Minor eines Graphen $G$ ist auch ein Minor von $G$.
+    \item \textbf{nicht} jeder Minor eines Graphen $G$ auch ein topologischer Minor von $G$.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}[b]{Beispiel: Nicht jeder Minor ist auch topologischer Minor} \vspace{4pt}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.32\linewidth}
+    \centering
+
+\onslide<2>{
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {};
+    \node[main] at (-3, 0) (2) {};
+    \node[main] at (0, -3) (3) {};
+    \node[main] at (-3, -3) (4) {};
+    
+    \node[main] at (-1.5, -1.5) (z) {};
+    
+    \node[draw=blue, circle,fill=blue] at (-0.75, -0.75) (a) {};
+    \node[draw=blue, circle,fill=blue] at (-2.25, -0.75) (b) {};
+    \node[draw=blue, circle,fill=blue] at (-0.75, -2.25) (c) {};
+    \node[draw=blue, circle,fill=blue] at (-2.25, -2.25) (d) {};
+
+    \path (1) edge (a);
+    \path (2) edge (b);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    
+    \path (z) edge (a);
+    \path (z) edge (b);
+    \path (z) edge (c);
+    \path (z) edge (d);
+
+    
+    \path (1) edge (2);
+    \path (1) edge (3);
+    
+    \path (4) edge (2);
+    \path (4) edge (3);
+
+\end{tikzpicture}
+  \caption{$F$}
+  }
+
+
+\end{minipage}
+    \begin{minipage}{.32\linewidth}
+    \centering
+
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {};
+    \node[main] at (-3, 0) (2) {};
+    \node[main] at (0, -3) (3) {};
+    \node[main] at (-3, -3) (4) {};
+    
+    \node[draw=blue, circle,fill=blue] at (-1.5, -1.5) (5) {};
+
+    \path (1) edge (5);
+    \path (2) edge (5);
+    \path (3) edge (5);
+    \path (4) edge (5);
+    
+    \path (1) edge (2);
+    \path (1) edge (3);
+    
+    \path (4) edge (2);
+    \path (4) edge (3);
+
+\end{tikzpicture}
+  \caption{$G$}
+
+
+\end{minipage}
+    \begin{minipage}{.32\linewidth}
+    \centering
+\onslide<3->{
+
+ \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {};
+    \node[main] at (-3, 0) (2) {};
+    \node[main] at (0, -3) (3) {};
+    \node[main] at (-3, -3) (4) {};
+    
+    \node[draw=blue, circle,fill=blue] at (-1, -1) (a) {};
+    \node[draw=blue, circle,fill=blue] at (-2, -1) (b) {};
+    \node[draw=blue, circle,fill=blue] at (-1, -2) (c) {};
+    \node[draw=blue, circle,fill=blue] at (-2, -2) (d) {};
+
+    \path (a) edge (b);
+    \path (a) edge (c);
+    \path (d) edge (b);
+    \path (d) edge (c);
+    
+    \path (1) edge (a);
+    \path (2) edge (b);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    
+    \path (1) edge (2);
+    \path (1) edge (3);
+    
+    \path (4) edge (2);
+    \path (4) edge (3);
+
+\end{tikzpicture}
+  \caption{$H$}
+  }
+
+
+\end{minipage}
+\end{figure}
+
+
+\end{frame}
+
+\section{Satz von Kuratowski}
+
+\subsection{}
+
+
+\begin{frame}[c]{Satz von Kuratowski} \vspace{4pt}
+
+Charakterisierung aller planaren Graphen mit Hilfe des $K_{3,3}$, $K_5$ und Minoren.
+
+\vspace{1em}
+
+\onslide<2->{
+\begin{block}{Satz von Kuratowski \scriptsize{(Kazimierz Kuratowski, 1930)}}
+\vspace{0.5em}
+\textit{Ein Graph ist genau dann planar, wenn er weder einen $K_{3,3}$ noch einen $K_5$ als Minor enthält.}
+\vspace{0.5em}
+\end{block}
+}
+
+\onslide<3->{
+\small
+\textit{Bemerkung:} Ebenfalls gilt, ein Graph $G$ ist genau dann planar ist, wenn er weder den $K_{3,3}$ noch den $K_5$ als topologischen Minor enthält.\\
+}
+
+\end{frame}
+
+\begin{frame}[t]{Satz von Kuratowski} \vspace{4pt}
+
+Aussagen des Satzes von Kuratowski:
+
+
+\begin{enumerate}
+    \onslide<2->{
+    \item{
+    Wenn ein Graph $G$ den $K_{3,3}$ oder $K_5$ als Minor enthält, ist der Graph $G$ \textbf{nicht} planar.
+    
+    \vspace{0.5em}
+    $\Rightarrow$ Intuitiv klar.
+    }\\
+    }
+    \vspace{0.3em}
+    \onslide<3->{
+    \item{
+    Wenn eine Graph $G$ nicht planar ist, enthält er den $K_{3,3}$ oder $K_5$ als Minor.
+    
+    \vspace{0.5em}
+    $\Rightarrow$ \textbf{Nicht} intuitiv klar.
+    }
+    }
+\end{enumerate}
+
+
+\end{frame}
+
+\subsection{Anwendung beim Petersen-Graph}
+
+\begin{frame}[t]{Anwendung beim Petersen-Graph} \vspace{4pt}
+
+\begin{columns}
+\column{0.5\textwidth}
+
+
+\onslide<1->{
+Ist der $K_5$ Minor des Petersen-Graph?\\
+}
+\onslide<2->{
+\vspace{0.3em}
+$\Rightarrow$ \textbf{Ja}\\
+}
+\vspace{0.7em}
+\onslide<3->{
+Ist der $K_{3,3}$ Minor des Petersen-Graph?\\
+}
+
+
+
+\column{0.5\textwidth}
+
+\only<1>{
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (1, 0.2) (b) {b};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-0.7, -1) (d) {d};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);
+    \path (a) edge (d);
+    \path (b) edge (e);
+    \path (b) edge (d);
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (2) edge (b);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+ \vspace{1em}
+    \caption{Petersen-Graph}
+    \label{fig:my_label}
+\end{figure}
+}
+
+\only<2>{
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (1, 0.2) (b) {b};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-0.7, -1) (d) {d};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);
+    \path (a) edge (d);
+    \path (b) edge (e);
+    \path (b) edge (d);
+    \path (c) edge (e);
+    
+    \path[highlight] (1) edge (a);
+    \path[highlight] (2) edge (b);
+    \path[highlight] (3) edge (c);
+    \path[highlight] (4) edge (d);
+    \path[highlight] (5) edge (e);
+
+\end{tikzpicture} 
+ \vspace{1em}
+    \caption{Petersen-Graph}
+    \label{fig:my_label}
+\end{figure}
+}
+
+\only<3>{
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (1, 0.2) (b) {b};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-0.7, -1) (d) {d};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);
+    \path (a) edge (d);
+    \path (b) edge (e);
+    \path (b) edge (d);
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (2) edge (b);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+ \vspace{1em}
+    \caption{Petersen-Graph}
+    \label{fig:my_label}
+\end{figure}
+}
+
+\end{columns}
+
+
+\end{frame}
+
+
+\begin{frame}[t]{Anwendung beim Petersen-Graph} \vspace{4pt}
+
+\only<1>{
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.39\linewidth}
+    \centering
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[highlight] at (1, 0.2) (b) {b};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-0.7, -1) (d) {d};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);
+    \path (a) edge (d);
+    \path[highlight] (b) edge (e);
+    \path[highlight] (b) edge (d);
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path[highlight] (2) edge (b);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+\end{minipage}
+\begin{minipage}{.07\linewidth}
+\centering
+$\Longrightarrow$
+\end{minipage}
+\begin{minipage}{.39\linewidth}
+\centering
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-0.7, -1) (d) {d};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);
+    \path (a) edge (d);
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+\end{minipage}
+ \vspace{1em}
+    \caption{Schritt 1: Knoten B wird gelöscht.}
+    \label{fig:my_label}
+\end{figure}
+}
+
+\only<2>{
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[highlight] at (-0.7, -1) (d) {d};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);
+    \path[highlight] (a) edge (d);
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+    \end{minipage}
+    \begin{minipage}{.07\linewidth}
+    \centering
+    $\Longrightarrow$
+    \end{minipage}
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+    \end{minipage}
+     \vspace{1em}
+    \caption{Schritt 2: Kante zwischen Knoten d und Knoten a kontrahieren.}
+    \label{fig:my_label}
+\end{figure}
+
+}
+\only<3>{
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[highlight] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path[highlight] (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (e);
+
+\end{tikzpicture}
+    \end{minipage}
+    \begin{minipage}{.07\linewidth}
+    \centering
+    $\Longrightarrow$
+    \end{minipage}
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+    \end{minipage}
+ \vspace{1em}
+    \caption{Schritt 3: Kante zwischen Knoten 2 und Knoten 3 kontrahieren.}
+    \label{fig:my_label}
+\end{figure}
+
+}
+\only<4>{
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[highlight] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path[highlight] (5) edge (e);
+
+\end{tikzpicture}
+    \end{minipage}
+    \begin{minipage}{.07\linewidth}
+    \centering
+    $\Longrightarrow$
+    \end{minipage}    
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (c);
+
+\end{tikzpicture} 
+    \end{minipage}
+     \vspace{1em}
+    \caption{Schritt 4: Kante zwischen Knoten e und Knoten 5 kontrahieren.}
+    \label{fig:my_label}
+\end{figure}
+
+}
+\only<5>{
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[highlight] at (0, 2.3) (1) {1};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[highlight] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[highlight] at (0.7, -1) (c) {c};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (c);
+
+\end{tikzpicture} 
+    \end{minipage}
+    \begin{minipage}{.07\linewidth}
+    \centering
+    $\Longrightarrow$
+    \end{minipage}
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {1};
+    \node[main] at (2, 0) (4) {4};
+    \node[main] at (4, 0) (c) {c};
+    
+    \node[main] at (0, -2) (5) {5};
+    \node[main] at (2, -2) (3) {3};
+
+    \node[main] at (4, -2) (a) {a};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (c);
+
+\end{tikzpicture} 
+    \end{minipage}
+     \vspace{1em}
+    \caption{Schritt 5: Anordnung der Knoten anpassen.}
+    \label{fig:my_label}
+\end{figure}
+}
+
+\only<6>{
+\vspace{-0.8em}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.90, node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[highlight] at (0, 2.3) (1) {1};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[highlight] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[highlight] at (0.7, -1) (c) {c};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (c);
+
+\end{tikzpicture} 
+    \end{minipage}
+    \begin{minipage}{.07\linewidth}
+    \centering
+    $\Longrightarrow$
+    \end{minipage}
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[scale=0.90, node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {1};
+    \node[main] at (2, 0) (4) {4};
+    \node[main] at (4, 0) (c) {c};
+    
+    \node[main] at (0, -2) (5) {5};
+    \node[main] at (2, -2) (3) {3};
+
+    \node[main] at (4, -2) (a) {a};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (c);
+
+\end{tikzpicture} 
+    \end{minipage}
+    \label{fig:my_label}
+\end{figure}
+
+Hat auch den $K_{3,3}$ als Minor.\\
+\vspace{0.1em}
+$\Rightarrow$ \textbf{nicht planar.}\\
+
+}
+
+\end{frame}
+
+\section*{Zusammenfassung}
+
+\subsection{}
+
+\begin{frame}[c]{Zusammenfassung}
+
+\begin{itemize}
+    \item Fast Planarität von Graphen am Beispiel des $K_{3,3}$ und $K_5$
+    \item Kantenkontraktion
+    \item Unterteilungsgraph
+    \item Minor
+    \item Topologischer Minor
+    \item Minorenrelation
+    \item Satz von Kuratowski
+    \item Anwendung des Satzes von Kuratowski am Petersen Graph
+\end{itemize}
+
+\end{frame}
+
+\end{document}

@@ -1,0 +1,1187 @@
+\documentclass[a4paper]{article}
+
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[left=2cm,right=2cm,top=2.5cm,bottom=2.5cm]{geometry}
+
+\usepackage{float}
+\usepackage{setspace}
+\usepackage{mathabx}
+\usepackage{scalerel}
+\usepackage{graphicx}
+\usepackage{csquotes}
+
+\usepackage{tikz} 
+\usetikzlibrary{graphs,graphs.standard}
+\usepackage{tikzpagenodes}
+
+\title{Mathematische Algorithmen\\ Planarität - Minoren und der Satz von Kuratowski}
+\author{Sven Kube }
+\date{10. Juni 2022}
+
+\newtheorem{definition}{Definition}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\maketitle
+\begin{tikzpicture}[remember picture,overlay,shift={(current page.north east)}]
+\node[anchor=north east,xshift=5pt,yshift=-2cm]{\includegraphics[width=1.7cm]{./FHAC.jpg}};
+\end{tikzpicture}
+
+\vspace{2cm}
+
+\tableofcontents
+
+\setstretch{1.25}
+
+\newpage
+
+\section{Motivation}
+Bisher haben wir mit Eulers Polyedersatz eine Eigenschaft planarer Graphen kennengelernt.
+Für den $K_{3,3}$ sowie den $K_5$ haben wir dabei einen Widerspruch für die Kantenabschätzung hergeleitet und gezeigt, dass der $K_{3,3}$ sowie der $K_5$ nicht planar sind.\\
+
+Aus diesem Zusammenhang kann man leicht folgern, dass auch der $K_{3,3}$ oder der $K_5$ um Knoten und Kanten erweitert, nicht planar sein kann.
+Man könnte nun auf den Gedanken kommen, den $K_{3,3}$ oder $K_5$ als \textit{atomare Bestandteile} von Graphen die nicht planar sind zu bezeichnen.
+Als \textit{Bausteine für Nichtplanarität}.
+Man könnte sagen: \enquote{Wenn ein Graph solch einen atomaren Bauteil \textit{drin hat}, ist er nicht planar}.\\
+
+Die zuvor genannten Gedanken, die hier noch diffus formuliert sind, werden in den kommenden Kapiteln definiert, erläutert und anhand von Beispielen anschaulich gemacht. 
+
+\section{Fast Planarität des $K_{3,3}$ und $K_5$}
+In der Motivation haben wir bei dem $K_{3,3}$ und $K_5$ von \textit{atomaren Bausteinen für Nichtplanarität} gesprochen.
+Wie bei Atomen in der Physik stellen wir uns dabei die kleinsten, nicht weiter aufteilbaren, Bausteine für Nichtplanarität vor.
+Wir sprechen also, auf unsere Graphen bezogen, von Graphen, die nicht planar sind und ebenfalls die kleinsten nicht planaren Graphen sind.
+Dazu betrachten wir nun die fast planaren Graphen.\\
+
+Ein Graph $G$ ist fast planar, wenn er durch Löschen einer Kante planar wird.
+Die folgenden Abbildungen zeigen, dass dies für den $K_5$ und den $K_{3,3}$ gilt.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.4\linewidth}
+        \centering
+   \vspace{-1cm}
+ \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+
+    \path (1) edge (2);
+    \path[blue] (1) edge (3);
+    \path (1) edge (4);
+    \path (2) edge (3);
+    \path (2) edge (4);
+    \path (2) edge (5);
+    \path (3) edge (4);
+    \path (3) edge (5);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+\end{tikzpicture} 
+\end{minipage}
+\begin{minipage}{.07\linewidth}
+\centering
+\vspace{-1cm}
+$\Longrightarrow$
+\end{minipage}
+    \begin{minipage}{.4\linewidth}
+        \centering
+      
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+
+    \path (1) edge (2);
+    \path (1) edge [out=160,in=180, distance=3cm ] (4);
+    \path (2) edge (3);
+    \path (2) edge [out=300,in=320, distance=3cm ] (4);
+    \path (2) edge (5);
+    \path (3) edge (4);
+    \path (3) edge (5);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+
+\end{tikzpicture} 
+\end{minipage}
+\vspace{-1cm}
+    \caption{Durch Entfernen einer Kante wird der $K_5$ planar.}
+    \label{fig:my_label}
+\end{figure}
+
+\vspace{-1.8cm}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.3\linewidth}
+    \centering
+    \vspace{-2.7cm}
+        \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {1};
+    \node[main] at (2, 0) (2) {2};
+    \node[main] at (4, 0) (3) {3};
+    
+    \node[main] at (0, -2) (4) {4};
+    \node[main] at (2, -2) (5) {5};
+    \node[main] at (4, -2) (6) {6};
+
+    \path (1) edge (4);
+    \path (1) edge (5);
+    \path (1) edge (6);
+    
+    \path (2) edge (4);
+    \path (2) edge (5);
+    \path (2) edge (6);
+    
+    \path[highlight] (3) edge (4);
+    \path (3) edge (5);
+    \path (3) edge (6);
+    
+\end{tikzpicture} 
+    \end{minipage}
+    \begin{minipage}{.07\linewidth}
+    \centering
+    \vspace{-2.7cm}
+    $\Longrightarrow$
+    \end{minipage}
+    \hspace{-1.5cm}
+    \begin{minipage}{.5\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {1};
+    \node[main] at (2, 0) (2) {2};
+    \node[main] at (4, 0) (3) {3};
+    
+    \node[main] at (0, -2) (4) {4};
+    \node[main] at (2, -2) (5) {5};
+    \node[main] at (4, -2) (6) {6};
+
+    \path (1) edge (4);
+    \path (1) edge (5);
+    \path (1) edge (6);
+    
+    \path (2) edge [out=130,in=180, distance=3cm ] (4);
+    \path (2) edge [out=30,in=300, distance=7cm ] (5);
+    \path (2) edge (6);
+    
+    \path (3) edge [out=330,in=310, distance=3cm ] (5);
+    \path (3) edge (6);
+    
+    \end{tikzpicture} 
+    \end{minipage}
+    \vspace{-4cm}
+    \caption{Durch Entfernen einer Kante wird der $K_{3,3}$ planar.}
+    \label{fig:my_label}
+\end{figure}
+
+Daraus folgt, dass der $K_{3,3}$ und der $K_5$ fast planar sind.
+
+
+\section{Begriffe aus der Graphentheorie}
+\label{section:begriffe_der_graphentheorie}
+Für die in kommenden Kapiteln folgenden Definitionen und Erklärungen definieren wir nun zunächst den Begriff der \textit{Kantenkontraktion} und des \textit{Unterteilungsgraphs} aus der Graphentheorie.
+
+\subsection{Kantenkontraktion}
+Als Kontraktion oder auch Kantenkontraktion wird in der Graphentheorie eine grundlegende Operation auf einem Graph beschrieben.
+
+\begin{definition}[Kantenkontraktion]
+Aus einem Graph $G$ wird eine Kante $e$ entfernt und die beiden vorher durch die Kante $e$ verbundenen Knoten $u$ und $v$ zu einem neuen Knoten $w$ vereinigt.
+\end{definition}
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{@{}c@{}}
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+    
+        \node[main] at (-2, 1)  (1)    {};
+        \node[main] at (1.5, 0.8)  (2)    {};
+        
+        \node[highlight] at (0, 0)  (u)    {u};
+        \node[highlight] at (0, -2)  (v)    {v};
+        
+        \node[main] at (-1, -3.5)  (3)    {};
+        \node[main] at (0.3, -3.5)  (4)    {};
+        \node[main] at (1.5, -2)  (5)    {};
+    
+        
+        \path (1) edge (2);
+        \path (1) edge (u);
+        \path (2) edge (u);
+        
+        \path[blue] (u) edge node[right] {$e$} (v);
+        
+        \path (3) edge (v);
+        \path (4) edge (v);
+        \path (5) edge (v);
+        
+        \path (4) edge (5);
+        
+        \path[dashed] (1) edge  (-2.5, 1.5);
+        \path[dashed] (1) edge  (-0.8, 1.6);
+        
+        \path[dashed] (2) edge  (1.5, 1.3);
+        \path[dashed] (2) edge  (2, 0.8);
+        
+        
+        \path[dashed] (3) edge  (-1.5, -3.5);
+        \path[dashed] (3) edge  (-1, -4);
+        \path[dashed] (4) edge  (0.3, -4);
+       
+        
+        \path[dashed] (5) edge  (2, -2.5);
+        \path[dashed] (5) edge  (2, -1.5);
+        
+        \draw [-stealth,draw=green](-0.2,-0.4) -- (-0.2,-0.9);
+        \draw [-stealth,draw=green](-0.2,-1.6) -- (-0.2,-1.1);
+
+    
+    \end{tikzpicture} 
+    \end{tabular}
+    \hspace{0.5cm}
+    \begin{tabular}{p{1cm}}
+    \begin{center}
+         $\Longrightarrow$
+    \end{center}
+    \end{tabular}
+    \hspace{0.5cm}
+    \begin{tabular}{@{}c@{}}
+   \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+    
+        \node[main] at (-2, 1)  (1)    {};
+        \node[main] at (1.5, 0.8)  (2)    {};
+        
+        \node[highlight] at (0, -1)  (w)    {w};
+        
+        \node[main] at (-1, -3.5)  (3)    {};
+        \node[main] at (0.3, -3.5)  (4)    {};
+        \node[main] at (1.5, -2)  (5)    {};
+    
+        
+        \path (1) edge (2);
+        \path (1) edge (w);
+        \path (2) edge (w);
+        
+        
+        \path (3) edge (w);
+        \path (4) edge (w);
+        \path (5) edge (w);
+        
+        \path (4) edge (5);
+        
+        \path[dashed] (1) edge  (-2.5, 1.5);
+        \path[dashed] (1) edge  (-0.8, 1.6);
+        
+        \path[dashed] (2) edge  (1.5, 1.3);
+        \path[dashed] (2) edge  (2, 0.8);
+        
+        
+        \path[dashed] (3) edge  (-1.5, -3.5);
+        \path[dashed] (3) edge  (-1, -4);
+        \path[dashed] (4) edge  (0.3, -4);
+       
+        
+        \path[dashed] (5) edge  (2, -2.5);
+        \path[dashed] (5) edge  (2, -1.5);
+        
+      
+
+    
+    \end{tikzpicture}
+    \end{tabular}
+    \caption{Durch Kantenkontraktion von $\{u,v\}$ entsteht ein neuer Knoten $w$.}
+    \label{fig:edge_contraction}
+\end{figure}
+
+In der Abbildung \ref{fig:edge_contraction} ist beispielhaft die Kontraktion der Kante $e$ dargestellt.
+Die beiden inzidenten Knoten $u$ und $v$ der Kante $e$ werden nach der Definition der Kantenkontraktion zu einem neuen Knoten $w$ vereinigt.
+Die mit $u$ und $v$ verbundenen Kanten werden zu dem neuen Knoten $w$ umgelenkt.
+
+\subsection{Unterteilungsgraph}
+Als Unterteilungsgraph wird in der Graphentheorie ein Graph bezeichnet, der durch Kantenunterteilung aus einem anderen Graphen entstanden ist.\\
+
+Sei $G=(V,E)$ ein ungerichteter Graph, dann versteht man unter einer Unterteilung einer Kante $e=\{u, v\} \in E$ die Ersetzung dieser Kante durch zwei neue Kanten $e_1$ und $e_2$, die die beiden Knoten $u$ und $v$ der entfernten Kante mit einem neuen Knoten $w \notin V$ verbinden. Auf diese Weise entsteht ein neuer Graph $G' = (V', E')$ mit der neuen Knotenmenge $V'=V \cup \{ w \}$ und der neuen Kantenmenge: $E' = E \setminus \{ e \} \cup \{ e_1, e_2 \}$, wobei $e_1=\{ u, w \}$ und $e_2=\{ w, v \}$ sind.\\
+
+\begin{definition}[Unterteilungsgraph]
+Als Unterteilungsgraph eines Graphen $G$ wird ein Graph bezeichnet, der durch (null-, ein- oder mehrmalige) Kantenunterteilung in $G$ entsteht.
+\end{definition}
+
+\begin{figure}[H]
+    \centering
+    $G:$\hspace{0.5cm}
+        \begin{tabular}{@{}c@{}}
+
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}]
+        \node[main] (1) {$u$}; 
+        \node[main] (2) [below of=1] {$v$}; 
+
+        \path (1) edge  node [right] {$e$} (2);
+    \end{tikzpicture}
+    \end{tabular}
+    \hspace{1cm}$\Longrightarrow$\hspace{1cm}
+    $G':$\hspace{0.5cm}
+        \begin{tabular}{@{}c@{}}
+    \begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+        \node[main] (1) {$u$}; 
+        \node[draw, circle, blue] (2) [below of=1] {$w$}; 
+        \node[main] (3) [below of=2] {$v$}; 
+
+       \path[blue] (1) edge node [right] {$e_1$} (2);
+       \path[blue] (2) edge node [right] {$e_2$} (3);
+    
+    \end{tikzpicture} 
+    \end{tabular}
+    \caption{$G$ wird durch Kantenunterteilung von $e$ zu $G'$.}
+    \label{fig:edge_subdivision}
+\end{figure}
+
+In der Abbildung \ref{fig:edge_subdivision} wird beispielhaft eine Kantenunterteilung der Kante $e$ gezeigt.
+Durch die Unterteilung von $e$ entsteht ein neuer Knoten $w$.
+Aus der vorherigen Kante $\{u,v\}$ sind nach der Unterteilung in dem Graph $G'$ die Kanten $E = \{ \{u,w\}\{w,u\} \}$ ($e_1$ und $e_2$) entstanden.
+
+
+\section{Minoren}
+Mithilfe der in Abschnitt \ref{section:begriffe_der_graphentheorie} vorgestellten Begriffen der Graphentheorie, der Kantenkontraktion und dem Unterteilungsgraph, wollen wir nun die Begriffe des \textit{Minors} sowie des \textit{topologischen Minors} einführen und definieren.
+
+\subsection{Minor}
+Im Folgenden wollen wir uns der Definition des Minors anhand eines Beispiels nähern.\\
+
+Betrachten wir folgendes Beispiel bestehend aus den drei Graphen $K_3$, $G_1$ und $G_2$.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.32\linewidth}
+    \centering
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {};
+    \node[main] at (-1, -2) (2) {};
+    \node[main] at (1, -2) (3) {};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (1);
+
+\end{tikzpicture}
+\vspace{0.6cm}
+  \caption{$K_3$}
+
+\end{minipage}
+    \begin{minipage}{.32\linewidth}
+    \centering
+ \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, small/.style = {draw, circle, fill, scale = 0.4}]
+
+    \node[small] at (0, 0) (11) {};
+    \node[small] at (0.3, -0.3) (12) {};
+    \node[small] at (0.4, 0.2) (13) {};
+
+    
+    
+    \node[small] at (-1, -2) (21) {};
+    \node[small] at (-0.6, -1.9) (22) {};
+    
+    
+    
+    \node[small] at (1, -2) (31) {};
+    \node[small] at (1.15, -1.3) (32) {};
+    \node[small] at (1.5, -1.3) (33) {};
+    \node[small] at (1.5, -1.8) (34) {};
+    
+
+    \path (11) edge (12);
+    \path (11) edge (13);
+    \path (11) edge (21);
+    \path (32) edge (12);
+    
+    \path (32) edge (33);
+    \path (32) edge (31);
+    \path (34) edge (33);
+    \path (34) edge (31);
+    \path (31) edge (33);
+    
+    \path (22) edge (31);
+    \path (22) edge (21);
+    
+    \draw (0.2,0) circle (15pt);
+    
+    \draw (-0.8, -1.95) ellipse (15pt and 10pt);
+    
+    \draw (1.25, -1.7) circle (20pt);
+
+\end{tikzpicture}
+  \caption{$G_1$}
+
+\end{minipage}
+\begin{minipage}{.32\linewidth}
+\centering
+ \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, small/.style = {draw, circle, fill, scale = 0.4},gray/.style = {draw=gray, circle, fill=gray, scale = 0.4}]
+
+    \node[small] at (0, 0) (11) {};
+    \node[small] at (0.3, -0.3) (12) {};
+    \node[small] at (0.4, 0.2) (13) {};
+    
+    \node[gray] at (1.2, -0.3) (X1) {};
+    \path[gray] (13) edge (X1);
+    \path[gray] (33) edge (X1);
+
+    
+    
+    \node[small] at (-1, -2) (21) {};
+    \node[small] at (-0.6, -1.9) (22) {};
+    
+    \node[gray] at (-0.8, -0.4) (X2) {};
+    \node[gray] at (-1.7, -2) (X3) {};
+    \node[gray] at (-1.3, -1.5) (X4) {};
+    
+    \path[gray] (11) edge (X2);
+    \path[gray] (X2) edge (X4);
+    \path[gray] (X3) edge (X4);
+    
+    \path[gray] (X3) edge (21);
+    \path[gray] (X4) edge (21);
+
+    
+    
+    \node[small] at (1, -2) (31) {};
+    \node[small] at (1.15, -1.3) (32) {};
+    \node[small] at (1.5, -1.3) (33) {};
+    \node[small] at (1.5, -1.8) (34) {};
+    
+
+    \path (11) edge (12);
+    \path (11) edge (13);
+    \path (11) edge (21);
+    \path (32) edge (12);
+    
+    \path (32) edge (33);
+    \path (32) edge (31);
+    \path (34) edge (33);
+    \path (34) edge (31);
+    \path (31) edge (33);
+    
+    \path (22) edge (31);
+    \path (22) edge (21);
+    
+    \draw (0.2,0) circle (15pt);
+    
+    \draw (-0.8, -1.95) ellipse (15pt and 10pt);
+    
+    \draw (1.25, -1.7) circle (20pt);
+
+\end{tikzpicture} 
+  \caption{$G_2$}
+
+\end{minipage}
+\end{figure}
+
+Auf der linken Seite ist der vollständige Graph mit drei Knoten $K_3$ abgebildet. 
+Diesen erhält man durch die Kontraktion von Kanten innerhalb des Graphen $G_1$. 
+Der Graph $G_1$ ist selbst wieder in dem Graph $G_2$ enthalten.
+Dies ist ein Beispiel dafür, dass der $K_3$ ein Minor von $G_2$ ist.
+
+\begin{definition}[Minor]
+Ein Graph $G$ heißt \textit{Minor} von $G_2$, wenn $G_2$ einen Teilgraph enthält, aus dem durch Kantenkontraktion $G$ hervorgeht.
+\end{definition}
+
+
+\subsection{Topologischer Minor}
+Zusätzlich zu dem Begriff des Minors wollen wir nun auch den Begriff des \textit{topologischen Minors} einführen.\\
+
+Betrachten wir folgendes Beispiel bestehend aus den drei Graphen $K_3$, $G_1$ und $G_2$.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.32\linewidth}
+    \centering
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {};
+    \node[main] at (-1, -2) (2) {};
+    \node[main] at (1, -2) (3) {};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (1);
+
+\end{tikzpicture}
+  \caption{$K_3$}
+
+\end{minipage}
+    \begin{minipage}{.32\linewidth}
+    \centering
+ \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, small/.style = {draw, circle, fill, scale = 0.4}]
+
+    \node[main] at (0, 0) (1) {};
+    
+    \node[small] at (-0.5, -1) (a) {};
+    
+    \node[main] at (-1, -2) (2) {};
+    
+    \node[small] at (0.65, -1.3) (a) {};
+    
+    \node[main] at (1, -2) (3) {};
+    
+    \node[small] at (-0.5, -2) (c) {};
+    \node[small] at (0.3, -2) (d) {};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (1);
+
+\end{tikzpicture}
+  \caption{$G_1$}
+
+\end{minipage}
+\begin{minipage}{.32\linewidth}
+\centering
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, small/.style = {draw, circle, fill, scale = 0.4}, gray/.style = {draw=gray, circle, fill=gray,}]
+
+    \node[main] at (0, 0) (1) {};
+    
+    
+    \node[small] at (-0.5, -1) (a) {};
+    
+    \node[main] at (-1, -2) (2) {};
+    
+    \node[small] at (0.65, -1.3) (a) {};
+    
+    \node[main] at (1, -2) (3) {};
+    
+    \node[small] at (-0.5, -2) (c) {};
+    \node[small] at (0.3, -2) (d) {};
+    
+    
+    
+    \node[gray] at (-1.5, 0) (z) {};
+    \node[gray] at (2, 0) (y) {};
+    \node[gray] at (2.5, -2) (x) {};
+
+    
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (1);
+    
+    \path[gray] (3) edge (x);
+    \path[gray] (1) edge (y);
+    \path[gray] (3) edge (y);
+    \path[gray] (1) edge (z);
+
+\end{tikzpicture} 
+  \caption{$G_2$}
+
+\end{minipage}
+\end{figure}
+
+
+Der Graph $G_1$ in der Mitte stellt einen Unterteilungsgraph von dem Graph $K_3$ auf der linken Seite dar. Rechts dargestellt ist der Graph $G_2$ in dem der Unterteilungsgraph $G_1$ enthalten ist. $K_3$ ist topologischer Minor von $G_2$.
+
+\begin{definition}[Topologischer Minor]
+Ein Graph $G$ heißt \textit{topologischer Minor} von $G_2$, wenn $G_2$ einen Unterteilungsgraphen von $G$ enthält.
+\end{definition}
+
+\newpage
+
+\subsection{Minorenrelation}
+Durch die Einführung des Begriffs \textit{Minor} können wir die Minorenrelation definieren:
+
+\begin{definition}
+$ G \preccurlyeq H :\Longleftrightarrow G$ ist Minor von $H$.
+\end{definition}
+
+Eigenschaften der Minorenrelation:
+\begin{itemize}
+    \item Die Minorenrelation ist reflexiv, transitiv und antisymetrisch und definiert daher eine Ordnungsrelation auf den endlichen Graphen.
+    \item Es gilt, dass jeder topologische Minor eines Graphen $G$ auch ein Minor von $G$ ist.
+    \item Es gilt \textbf{nicht}, dass jeder Minor eines Graphen $G$ auch ein topologischer Minor von $G$ ist.
+\end{itemize}
+
+\vspace{2em}
+
+Im Folgenden betrachten wir ein Beispiel anhand dessen klar wird, dass nicht jeder Minor eines Graphen $G$ auch ein topologischer Minor von $G$ ist.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.32\linewidth}
+    \centering
+
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {};
+    \node[main] at (-3, 0) (2) {};
+    \node[main] at (0, -3) (3) {};
+    \node[main] at (-3, -3) (4) {};
+    
+    \node[main] at (-1.5, -1.5) (z) {};
+    
+    \node[draw=blue, circle,fill=blue] at (-0.75, -0.75) (a) {};
+    \node[draw=blue, circle,fill=blue] at (-2.25, -0.75) (b) {};
+    \node[draw=blue, circle,fill=blue] at (-0.75, -2.25) (c) {};
+    \node[draw=blue, circle,fill=blue] at (-2.25, -2.25) (d) {};
+
+    \path (1) edge (a);
+    \path (2) edge (b);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    
+    \path (z) edge (a);
+    \path (z) edge (b);
+    \path (z) edge (c);
+    \path (z) edge (d);
+
+    
+    \path (1) edge (2);
+    \path (1) edge (3);
+    
+    \path (4) edge (2);
+    \path (4) edge (3);
+
+\end{tikzpicture}
+  \caption{$F$}
+  
+\end{minipage}
+    \begin{minipage}{.32\linewidth}
+    \centering
+
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {};
+    \node[main] at (-3, 0) (2) {};
+    \node[main] at (0, -3) (3) {};
+    \node[main] at (-3, -3) (4) {};
+    
+    \node[draw=blue, circle,fill=blue] at (-1.5, -1.5) (5) {};
+
+    \path (1) edge (5);
+    \path (2) edge (5);
+    \path (3) edge (5);
+    \path (4) edge (5);
+    
+    \path (1) edge (2);
+    \path (1) edge (3);
+    
+    \path (4) edge (2);
+    \path (4) edge (3);
+
+\end{tikzpicture}
+  \caption{$G$}
+
+\end{minipage}
+    \begin{minipage}{.32\linewidth}
+    \centering
+
+ \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle, fill}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {};
+    \node[main] at (-3, 0) (2) {};
+    \node[main] at (0, -3) (3) {};
+    \node[main] at (-3, -3) (4) {};
+    
+    \node[draw=blue, circle,fill=blue] at (-1, -1) (a) {};
+    \node[draw=blue, circle,fill=blue] at (-2, -1) (b) {};
+    \node[draw=blue, circle,fill=blue] at (-1, -2) (c) {};
+    \node[draw=blue, circle,fill=blue] at (-2, -2) (d) {};
+
+    \path (a) edge (b);
+    \path (a) edge (c);
+    \path (d) edge (b);
+    \path (d) edge (c);
+    
+    \path (1) edge (a);
+    \path (2) edge (b);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    
+    \path (1) edge (2);
+    \path (1) edge (3);
+    
+    \path (4) edge (2);
+    \path (4) edge (3);
+
+\end{tikzpicture}
+  \caption{$H$}
+  
+\end{minipage}
+\end{figure}
+
+Zu Beginn betrachten wir die Graphen $G$ und $F$ und versuchen zu zeigen, dass $G$ sowohl ein Minor als auch ein topologischer Minor von $F$ ist:
+\begin{itemize}
+    \item Wenn wir in dem Graph $F$ die Kante zwischen den blau markierten Knoten und den Eckpunkten kontrahieren, erhalten wir den Graph $G$.\\
+    $\Rightarrow$ $G$ ist Minor von $F$.
+    \item Der Graph $F$ ist der Unterteilungsgraph von $G$, bei dem jede Kante vom Mittelpunkt zu den Eckpunkten unterteilt wurde.\\
+    $\Rightarrow$ $G$ ist topologischer Minor von $F$.
+\end{itemize}
+
+Betrachten wir nun die Graphen $G$ und $H$ und versuchen zu zeigen, dass $G$ sowohl ein Minor als auch ein topologischer Minor von $H$ ist
+\begin{itemize}
+    \item Wenn wir in dem Graphen $H$ die Kanten zwischen den blauen Knoten kontrahieren, sodass nur ein blauer Knoten verbleibt, haben wir den Graph $G$ erzeugt.\\
+    $\Rightarrow$ $G$ ist Minor von $H$.
+    \item Bei dem Versuch in dem Graph $H$ einen Unterteilungsgraphen von $G$ zu finden haben wir nun ein Problem. Der Graph $H$ enthält keinen Unterteilungsgraph von $G$. $G$ ist daher kein topologischer Minor von $H$.\\
+    $\Rightarrow$ $G$ ist \textbf{kein} topologischer Minor von $H$.
+\end{itemize}
+
+Damit haben wir ein Beispiel gefunden, bei dem ein Graph ein Minor eines anderen Graphen ist, es sich aber nicht auch um einen topologischen Minor handelt.
+
+\newpage
+
+\section{Kuratowski}
+Bisher haben wir mit Eulers Polyedersatz eine Eigenschaft planarer Graphen kennengelernt.
+Im Folgenden werden wir anhand der im vorherigen Abschnitt definierten Begriffe \textit{Minor} und \textit{topologischer Minor} eine Methode kennenlernen, um nachzuweisen, ob ein Graph planar ist oder nicht.\\
+
+\subsection{Satz von Kuratowski}
+Mit Hilfe der zuvor definierten Minoren und den Graphen $K_{3,3}$ und $K_5$ lassen sich nun alle planaren Graphen charakterisieren.\\
+
+1930 hat dazu der polnische Mathematiker Kazimierz Kuratowski den folgenden Satz verfasst:\\
+
+\textbf{Satz von Kuratowski:}
+\textit{Ein Graph ist genau dann planar, wenn er weder einen $K_{3,3}$ noch einen $K_5$ als Minor enthält.}\\
+
+
+Alternativ kann man formulieren, dass ein Graph genau dann planar ist, wenn er weder den $K_{3,3}$ noch den $K_5$ als \textit{topologischen Minor} enthält.\\
+
+Durch den Satz von Kuratowski lassen sich zwei Aussagen treffen:
+
+\begin{enumerate}
+    \item Wenn ein Graph $G$ den $K_{3,3}$ oder $K_5$ als Minor enthält, ist der Graph $G$ \textbf{nicht} planar.
+    \item Wenn ein Graph $G$ \textbf{nicht} planar ist, enthält er den $K_{3,3}$ oder $K_5$ als Minor.
+\end{enumerate}
+
+Dass der erstgenannte Zusammenhang gilt kann man sich leicht überlegen.
+Wenn man zu einem Graphen $G$, der bereits den $K_{3,3}$ oder $K_5$ enthält und daher nicht planar ist, weitere Knoten und Kanten hinzufügt, kann der Graph $G$ dadurch nicht planar werden.\\
+
+Im Vergleich dazu ist nicht intuitiv klar, dass auch der zweite Zusammenhang, wenn ein Graph $G$ \textbf{nicht} planar ist er den $K_{3,3}$ oder $K_5$ als Minor enthält, allgemein gilt.\\
+
+\textit{Bemerkung:} Der Beweis des Satzes von Kuratowski wird hier aufgrund seiner Länge nicht geführt.
+
+
+\subsection{Anwendung beim Petersen-Graph}
+In den folgenden Abbildungen sind die Knotenlöschungen und Kantenkontraktionen dargestellt, mit denen man aus dem Petersen-Graph den $K_{3,3}$ erhält.
+Damit ist, wie bereits zuvor erwähnt, mithilfe des Satzes von Kuratowski nachgewiesen, dass der Petersen-Graph nicht planar ist.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (1, 0.2) (b) {b};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-0.7, -1) (d) {d};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);
+    \path (a) edge (d);
+    \path (b) edge (e);
+    \path (b) edge (d);
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (2) edge (b);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+    \caption{Petersen-Graph}
+    \label{fig:my_label}
+\end{figure}
+
+Folgend wird in 5 Schritten mithilfe von Knotenlöschungen und Kantenkontraktionen gezeigt, dass der $K_{3,3}$ Minor des Petersen-Graph ist.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.39\linewidth}
+    \centering
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[highlight] at (1, 0.2) (b) {b};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-0.7, -1) (d) {d};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);
+    \path (a) edge (d);
+    \path[highlight] (b) edge (e);
+    \path[highlight] (b) edge (d);
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path[highlight] (2) edge (b);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+\end{minipage}
+\begin{minipage}{.07\linewidth}
+\centering
+$\Longrightarrow$
+\end{minipage}
+\begin{minipage}{.39\linewidth}
+\centering
+\begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-0.7, -1) (d) {d};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);
+    \path (a) edge (d);
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+\end{minipage}
+    \caption{Schritt 1: Knoten b wird gelöscht.}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[highlight] at (-0.7, -1) (d) {d};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);
+    \path[highlight] (a) edge (d);
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (d);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+    \end{minipage}
+    \begin{minipage}{.07\linewidth}
+    \centering
+    $\Longrightarrow$
+    \end{minipage}
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+    \end{minipage}
+    \caption{Schritt 2: Kante zwischen Knoten d und Knoten a kontrahieren.}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[highlight] at (2.3, 0.4) (2) {2};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (2);
+    \path[highlight] (2) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (e);
+
+\end{tikzpicture}
+    \end{minipage}
+    \begin{minipage}{.07\linewidth}
+    \centering
+    $\Longrightarrow$
+    \end{minipage}
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[main] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (e);
+
+\end{tikzpicture} 
+    \end{minipage}
+
+    \caption{Schritt 3: Kante zwischen Knoten 2 und Knoten 3 kontrahieren.}
+    \label{fig:my_label}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+    \node[highlight] at (-1, 0.2) (e) {e};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+    \path (c) edge (e);
+    
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path[highlight] (5) edge (e);
+
+\end{tikzpicture}
+    \end{minipage}
+    \begin{minipage}{.07\linewidth}
+    \centering
+    $\Longrightarrow$
+    \end{minipage}    
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 2.3) (1) {1};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[main] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[main] at (0.7, -1) (c) {c};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (c);
+
+\end{tikzpicture} 
+    \end{minipage}
+    \caption{Schritt 4: Kante zwischen Knoten e und Knoten 5 kontrahieren.}
+    \label{fig:my_label}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[highlight] at (0, 2.3) (1) {1};
+    \node[main] at (1.5, -2) (3) {3};
+    \node[highlight] at (-1.5, -2) (4) {4};
+    \node[main] at (-2.3, 0.4) (5) {5};
+
+    \node[main] at (0, 1) (a) {a};
+    \node[highlight] at (0.7, -1) (c) {c};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (c);
+
+\end{tikzpicture} 
+    \end{minipage}
+    \begin{minipage}{.07\linewidth}
+    \centering
+    $\Longrightarrow$
+    \end{minipage}
+    \begin{minipage}{.39\linewidth}
+    \centering
+    \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}, highlight/.style = {draw=blue, circle,text=blue}]
+
+    \node[main] at (0, 0) (1) {1};
+    \node[main] at (2, 0) (4) {4};
+    \node[main] at (4, 0) (c) {c};
+    
+    \node[main] at (0, -2) (5) {5};
+    \node[main] at (2, -2) (3) {3};
+
+    \node[main] at (4, -2) (a) {a};
+
+    \path (1) edge (3);
+    \path (3) edge (4);
+    \path (4) edge (5);
+    \path (5) edge (1);
+    
+    \path (a) edge (c);    
+
+    \path (1) edge (a);
+    \path (3) edge (c);
+    \path (4) edge (a);
+    \path (5) edge (c);
+
+\end{tikzpicture} 
+    \end{minipage}
+    \caption{Schritt 5: Anordnung der Knoten zu der üblichen Darstellung des $K_{3,3}$ verschieben.}
+    \label{fig:my_label}
+\end{figure}
+
+Da der Petersen-Graph, wie in dem vorherigen Beispiel gezeigt, den $K_{3,3}$ als Minor enthält ist er \textbf{nicht} planar.
+
+
+\section{Anhang}
+
+\subsection{Algorithmus von John Hopcroft und Robert Tarjan}
+1974 haben John Hopcroft und Robert Tarjan einen Algorithmus zum Testen auf Planarität von Graphen vorgestellt.
+Mithilfe von speziellen Datenstrukturen kann dieser Algorithmus in linearer Zeit ($O(n)$) einen Graphen auf Planarität testen.
+
+\section{Quellen}
+
+\begin{itemize}
+    \item $[1]$  \textquote{Graphen- und Netzwerkoptimierung} Christina Buesing ISBN 978-3-8274-2422-8
+    \item $[2]$  Wikipedia \begin{verbatim}
+        https://de.wikipedia.org/wiki/Minor_(Graphentheorie)
+        https://de.wikipedia.org/wiki/Kantenkontraktion
+        https://de.wikipedia.org/wiki/Unterteilungsgraph
+    \end{verbatim}
+    \item $[3]$ \textquote{Graphen an allen Ecken und Kanten},
+Lutz Volkmann,
+Lehrstuhl 2 Mathematik RWTH-Aachen 2011,
+Version 2
+\begin{verbatim}
+    https://www.math2.rwth-aachen.de/files/gt/buch/graphen_an_allen_ecken_und_kanten.pdf
+\end{verbatim}
+
+\end{itemize}
+
+\end{document}
